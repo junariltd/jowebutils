@@ -1,4 +1,4 @@
-# Junari Website Form Utilities
+# Odoo Website Form Utilities
 
 Odoo has an awesome metadata-driven back-end but its support for developing
 forms for the front-end is pretty much non-existant at the moment! As a developer
