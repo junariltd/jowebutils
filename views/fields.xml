@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- originally based on website_form/static/src/xml/website_form_editor.xml -->
+
+    <!-- Generic Field Layout -->
+    <template id="field_template" name="webformutils field layout">
+        <div t-att-class="'row form-group form-field' + (field.custom ? ' o_website_form_custom' : '') + (field.required ? ' o_website_form_required' : '')">
+            <div class="col-lg-3 col-md-4">
+                <label class="col-form-label" t-att-for="field.name">
+                    <t t-esc="field.string"/>
+                </label>
+            </div>
+            <div class="col-lg-7 col-md-8">
+                <t t-raw="0"/>
+            </div>
+        </div>
+    </template>
+
+    <!-- Char Field -->
+    <template id="field_char" name="webformutils char field">
+        <t t-call="webformutils.field_template">
+            <input
+                type="text"
+                class="form-control o_website_form_input"
+                t-att-name="field.name"
+                t-att-required="field.required"
+                t-att-value="field.value"
+            />
+        </t>
+    </template>
+
+</odoo>
