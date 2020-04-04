@@ -9,7 +9,7 @@
     'depends': [
     ],
     'data': [
-        'views/fields.xml'
+        'views/assets.xml'
     ],
     'js': [],
     'qweb': [],
