@@ -1,14 +1,14 @@
 odoo.define('jowebutils.forms', function (require) {
     'use strict';
 
-    var core = require('web.core');
-    var qweb = core.qweb;
-    // var ajax = require('web.ajax');
-    var Widget = require('web.Widget');
+    const core = require('web.core');
+    const qweb = core.qweb;
+    // const ajax = require('web.ajax');
+    const Widget = require('web.Widget');
 
-    // var _t = core._t;
+    // const _t = core._t;
 
-    var Field = Widget.extend({
+    const Field = Widget.extend({
         init: function (parent, field, default_value) {
             this.state = {
                 field,
@@ -16,16 +16,26 @@ odoo.define('jowebutils.forms', function (require) {
             }
             return this._super(parent);
         },
+        getValue: function () {
+            if (this.state.field.type == 'selection') {
+                const control = this.$el.find('select').first();
+                return control.val();
+            }
+            else {
+                const control = this.$el.find('input').first();
+                return control.val();
+            }
+        }
     });
 
-    var CharField = Field.extend({ template: 'jowebutils.field_char' });
-    var DateTimeField = Field.extend({ template: 'jowebutils.field_datetime' });
-    var DateField = Field.extend({ template: 'jowebutils.field_datetime' });
-    var TimeField = Field.extend({ template: 'jowebutils.field_datetime' });
-    var SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
+    const CharField = Field.extend({ template: 'jowebutils.field_char' });
+    const DateTimeField = Field.extend({ template: 'jowebutils.field_datetime' });
+    const DateField = Field.extend({ template: 'jowebutils.field_datetime' });
+    const TimeField = Field.extend({ template: 'jowebutils.field_datetime' });
+    const SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
 
     // TODO: Convert to registry
-    var FIELD_TYPE_MAP = {
+    const FIELD_TYPE_MAP = {
         'char': CharField,
         'datetime': DateTimeField,
         'date': DateField,
@@ -33,22 +43,32 @@ odoo.define('jowebutils.forms', function (require) {
         'selection': SelectionField
     }
 
-    var WebForm = Widget.extend({
+    const WebForm = Widget.extend({
         xmlDependencies: ['/jowebutils/static/src/xml/forms.xml'],
 
         init: function (parent, fields) {
             this.state = {
                 fields
             }
+            this.fieldWidgets = {};
             return this._super(parent)
         },
         start: function () {
             // Render fields
             this.state.fields.forEach(field => {
-                var field = new FIELD_TYPE_MAP[field.type](this, field);
-                field.appendTo(this.$el);
+                const widget = new FIELD_TYPE_MAP[field.type](this, field);
+                this.fieldWidgets[field.name] = widget;
+                widget.appendTo(this.$el);
             })
             return this._super();
+        },
+        getValues: function () {
+            const form_data = {};
+            this.state.fields.forEach(field => {
+                const widget = this.fieldWidgets[field.name];
+                form_data[field.name] = widget.getValue()
+            });
+            return form_data;
         },
     });
 

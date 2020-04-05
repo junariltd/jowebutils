@@ -1,7 +1,7 @@
 <templates>
 
     <t t-name="jowebutils.field_template">
-        <div t-att-class="'form-group row ' + (state.field.required ? ' joweb_field_required' : '')">
+        <div t-att-class="'form-group row joweb-field' + (state.field.required ? ' joweb-field-required' : '')">
             <label t-att-for="state.field.name"
                 class="col-sm-4 col-form-label">
                 <t t-esc="state.field.string"/>

@@ -1,4 +1,8 @@
 
-.joweb_field_required .col-form-label {
+.joweb-field .col-form-label {
+    font-weight: normal;
+}
+
+.joweb-field.joweb-field-required .col-form-label {
     font-weight: bold;
 }
