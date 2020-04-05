@@ -1,5 +1,19 @@
 <templates>
 
+    <t t-name="jowebutils.alert">
+        <t t-set="state" t-value="widget.state" />
+        <div t-att-class="'d-none alert alert-' + state.alert_type" role="alert">
+            <span t-esc="state.alert_text" />
+            <t t-if="state.alert_list_items &amp;&amp; state.alert_list_items.length">
+                <ul style="margin: 0;">
+                    <t t-foreach="state.alert_list_items" t-as="list_item">
+                        <li><t t-esc="list_item" /></li>
+                    </t>
+                </ul>
+            </t>
+        </div>
+    </t>
+
     <t t-name="jowebutils.field_template">
         <div t-att-class="'form-group row joweb-field' + (state.field.required ? ' joweb-field-required' : '')">
             <label t-att-for="state.field.name"

@@ -8,6 +8,27 @@ odoo.define('jowebutils.forms', function (require) {
 
     // const _t = core._t;
 
+    const Alert = Widget.extend({
+        xmlDependencies: ['/jowebutils/static/src/xml/forms.xml'],
+        template: 'jowebutils.alert',
+        init: function (parent) {
+            this.state = {}
+            return this._super(parent);
+        },
+        showAlert: function (alertText, alertType = 'danger', alertListItems = []) {
+            this.state = {
+                alert_text: alertText,
+                alert_type: alertType,
+                alert_list_items: alertListItems
+            };
+            this.renderElement();
+            this.$el.removeClass('d-none');
+        },
+        hideAlert: function () {
+            this.$el.addClass('d-none');
+        }
+    });
+
     const Field = Widget.extend({
         init: function (parent, field, default_value) {
             this.state = {
@@ -106,6 +127,7 @@ odoo.define('jowebutils.forms', function (require) {
     });
 
     return {
+        Alert,
         WebForm
     }
 
