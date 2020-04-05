@@ -6,3 +6,11 @@
 .joweb-field.joweb-field-required .col-form-label {
     font-weight: bold;
 }
+
+.joweb-field.joweb-field-has-error .col-form-label {
+    color: #dc3545;
+}
+
+.joweb-field.joweb-field-has-error .form-control {
+    border-color: #dc3545;
+}

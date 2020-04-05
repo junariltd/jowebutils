@@ -25,6 +25,24 @@ odoo.define('jowebutils.forms', function (require) {
                 const control = this.$el.find('input').first();
                 return control.val();
             }
+        },
+        validate: function () {
+            const errors = [];
+            const value = this.getValue();
+            const field = this.state.field;
+            const required = field.required;
+            if (required && typeof value != 'boolean' && !value) {
+                errors.push("Field '" + field.string + "' is required.");
+            }
+            return errors;
+        },
+        setHasError: function (hasError) {
+            if (hasError) {
+                this.$el.addClass('joweb-field-has-error')
+            }
+            else {
+                this.$el.removeClass('joweb-field-has-error')
+            }
         }
     });
 
@@ -69,6 +87,21 @@ odoo.define('jowebutils.forms', function (require) {
                 form_data[field.name] = widget.getValue()
             });
             return form_data;
+        },
+        validate: function () {
+            const errors = [];
+            this.state.fields.forEach(field => {
+                const widget = this.fieldWidgets[field.name];
+                const fieldErrors = widget.validate();
+                if (fieldErrors.length) {
+                    errors.push(...fieldErrors);
+                    widget.setHasError(true);
+                }
+                else {
+                    widget.setHasError(false);
+                }
+            });
+            return errors;
         },
     });
 
