@@ -17,11 +17,37 @@
         <t t-call="jowebutils.field_template">
             <input
                 type="text"
-                class="form-control o_website_form_input"
+                class="form-control"
                 t-att-name="state.field.name"
                 t-att-required="state.field.required"
                 t-att-value="state.value"
             />
+        </t>
+    </t>
+
+    <t t-name="jowebutils.field_datetime">
+        <t t-set="state" t-value="widget.state" />
+        <t t-call="jowebutils.field_template">
+            <input
+                t-att-type="(state.field.type == 'datetime') ? 'datetime-local' : state.field.type"
+                class="form-control"
+                t-att-name="state.field.name"
+                t-att-required="state.field.required"
+                t-att-value="state.value"
+            />
+        </t>
+    </t>
+
+    <t t-name="jowebutils.field_selection">
+        <t t-set="state" t-value="widget.state" />
+        <t t-call="jowebutils.field_template">
+            <select class="form-control" t-att-name="state.field.name">
+                <t t-foreach="state.field.selection" t-as="sel_option">
+                    <option t-att-value="sel_option[0]">
+                        <t t-esc="sel_option[1]"/>
+                    </option>
+                </t>
+            </select>
         </t>
     </t>
 
