@@ -13,4 +13,22 @@
         </nav>
     </t>
 
+    <t t-name="jowebutils.table">
+        <t t-set="state" t-value="widget.state" />
+        <t t-set="cols" t-value="state.columns" />
+        <div class="table-responsive border rounded border-top-0">
+            <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+                <tr>
+                    <th t-foreach="cols" t-as="col"><t t-esc="col.string" /></th>
+                </tr>
+                <tr t-foreach="state.data" t-as="row">
+                    <td t-foreach="cols" t-as="col">
+                        <t t-if="col_first"><a href="/"><t t-esc="row[col.name]" /></a></t>
+                        <t t-else=""><t t-esc="row[col.name]" /></t>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </t>
+
 </templates>

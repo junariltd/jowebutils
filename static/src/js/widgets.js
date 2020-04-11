@@ -15,8 +15,22 @@ odoo.define('jowebutils.widgets', function (require) {
         }
     });
 
+    const Table = Widget.extend({
+        xmlDependencies: ['/jowebutils/static/src/xml/widgets.xml'],
+        template: 'jowebutils.table',
+
+        init: function (parent, columns, data) {
+            this.state = {
+                columns,
+                data
+            }
+            return this._super(parent);
+        }
+    });
+
     return {
-        NavBar
+        NavBar,
+        Table
     }
 
 });
