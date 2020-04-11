@@ -5,6 +5,7 @@
         <xpath expr="." position="inside">
             <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/forms.css"/>
             <script type="text/javascript" src="/jowebutils/static/src/js/forms.js" />
+            <script type="text/javascript" src="/jowebutils/static/src/js/widgets.js" />
         </xpath>
     </template>
 

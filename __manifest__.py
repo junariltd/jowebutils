@@ -1,7 +1,7 @@
 {
-    'name': 'Junari Website Form Utils',
+    'name': 'Junari Odoo Website Utils',
     'version': '1.0',
-    'summary': 'Re-usable templates and helpers for website forms',
+    'summary': 'Re-usable widgets for odoo website modules',
     'author': 'Junari Ltd',
     'category': 'CRM',
     'website': 'https://www.junari.com',
