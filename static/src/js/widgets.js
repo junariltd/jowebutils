@@ -9,7 +9,19 @@ odoo.define('jowebutils.widgets', function (require) {
 
         init: function (parent, breadcrumbs) {
             this.state = {
-                breadcrumbs
+                breadcrumbs,
+                searchbar_sortings: [
+                    { label: 'Job Number' },
+                    { label: 'Date Raised' },
+                    { label: 'Status' },
+                ],
+                searchbar_filters: [
+                    { label: 'All Requests' },
+                    { label: 'Open Requests' },
+                    { label: 'Closed Requests' },
+                ],
+                sortby: 0,
+                filterby: 0,
             }
             return this._super(parent);
         }
@@ -28,9 +40,22 @@ odoo.define('jowebutils.widgets', function (require) {
         }
     });
 
+    const ButtonBar = Widget.extend({
+        xmlDependencies: ['/jowebutils/static/src/xml/widgets.xml'],
+        template: 'jowebutils.button_bar',
+
+        init: function (parent, buttons) {
+            this.state = {
+                buttons
+            }
+            return this._super(parent);
+        }
+    });
+
     return {
         NavBar,
-        Table
+        Table,
+        ButtonBar
     }
 
 });

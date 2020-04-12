@@ -2,6 +2,10 @@
 
     <t t-name="jowebutils.navbar">
         <t t-set="state" t-value="widget.state" />
+        <t t-set="searchbar_sortings" t-value="state.searchbar_sortings" />
+        <t t-set="sortby" t-value="state.sortby" />
+        <t t-set="searchbar_filters" t-value="state.searchbar_filters" />
+        <t t-set="filterby" t-value="state.filterby" />
         <nav t-attf-class="navbar navbar-light navbar-expand-lg border py-0 mb-2 o_portal_navbar mt-3 rounded">
             <ol class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
                 <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
@@ -10,6 +14,41 @@
                     <t t-else=""><li class="breadcrumb-item"><t t-esc="item.name" /></li></t>
                 </t>
             </ol>
+
+            <div class="nav flex-column flex-lg-row ml-auto p-0 mb-3 mb-lg-0 mt-1 mt-lg-0">
+                <div t-if="searchbar_sortings" class="form-inline">
+                    <span class="small mr-1 navbar-text">Sort By:</span>
+                    <div class="btn-group">
+                        <button id="portal_searchbar_sortby" data-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <t t-esc="searchbar_sortings[sortby]['label']"/>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                            <t t-foreach="searchbar_sortings" t-as="option">
+                                <a href="/"
+                                    t-att-class="'dropdown-item' + (option_first ? ' active' : '')">
+                                    <span t-esc="option['label']"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="searchbar_filters" class="form-inline ml-lg-2">
+                    <span class="small mr-1 navbar-text">Filter By:</span>
+                    <div class="btn-group">
+                        <button id="portal_searchbar_filters" data-toggle="dropdown" class="btn btn-secondary btn-sm dropdown-toggle">
+                            <t t-esc="searchbar_filters[filterby]['label']"/>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
+                            <t t-foreach="searchbar_filters" t-as="option">
+                                <a href="/"
+                                    t-att-class="'dropdown-item' + (option_first ? ' active' : '')">
+                                    <span t-esc="option['label']"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </nav>
     </t>
 
@@ -28,6 +67,26 @@
                     </td>
                 </tr>
             </table>
+        </div>
+    </t>
+
+    <t t-name="jowebutils.record_layout">
+        <div class="card mt-0 border-top-0 rounded-0 rounded-bottom">
+            <div t-if="card_header" t-attf-class="card-header">
+                <t t-raw="card_header"/>
+            </div>
+            <div t-if="card_body" t-attf-class="card-body">
+                <t t-raw="card_body"/>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="jowebutils.button_bar">
+        <t t-set="buttons" t-value="widget.state.buttons" />
+        <div style="padding: 15px 5px;">
+            <t t-foreach="buttons" t-as="button">
+                <button type="button" t-att-class="'btn ' + (button.class ? button.class : 'btn-primary')"><t t-esc="button.string" /></button>
+            </t>
         </div>
     </t>
 
