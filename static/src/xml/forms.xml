@@ -52,6 +52,17 @@
         </t>
     </t>
 
+    <t t-name="jowebutils.field_text">
+        <t t-set="state" t-value="widget.state" />
+        <t t-call="jowebutils.field_template">
+            <textarea
+                class="form-control"
+                t-att-name="state.field.name"
+                t-att-required="state.field.required"
+            ><t t-esc="state.value" /></textarea>
+        </t>
+    </t>
+
     <t t-name="jowebutils.field_selection">
         <t t-set="state" t-value="widget.state" />
         <t t-call="jowebutils.field_template">

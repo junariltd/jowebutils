@@ -39,11 +39,15 @@ odoo.define('jowebutils.forms', function (require) {
         },
         getValue: function () {
             if (this.state.field.type == 'selection') {
-                const control = this.$el.find('select').first();
+                const control = this.$('select').first();
+                return control.val();
+            }
+            else if (this.state.field.type == 'text') {
+                const control = this.$('textarea').first();
                 return control.val();
             }
             else {
-                const control = this.$el.find('input').first();
+                const control = this.$('input').first();
                 return control.val();
             }
         },
@@ -71,6 +75,7 @@ odoo.define('jowebutils.forms', function (require) {
     const DateTimeField = Field.extend({ template: 'jowebutils.field_datetime' });
     const DateField = Field.extend({ template: 'jowebutils.field_datetime' });
     const TimeField = Field.extend({ template: 'jowebutils.field_datetime' });
+    const TextField = Field.extend({ template: 'jowebutils.field_text' });
     const SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
 
     // TODO: Convert to registry
@@ -79,6 +84,7 @@ odoo.define('jowebutils.forms', function (require) {
         'datetime': DateTimeField,
         'date': DateField,
         'time': TimeField,
+        'text': TextField,
         'selection': SelectionField
     }
 
