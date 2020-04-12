@@ -35,9 +35,8 @@ odoo.define('jowebutils.widgets', function (require) {
             'click a.table-row-link': '_rowClicked'
         },
 
-        init: function (parent, name, columns, data) {
+        init: function (parent, columns, data) {
             this.state = {
-                name,
                 columns,
                 data
             }
@@ -46,9 +45,8 @@ odoo.define('jowebutils.widgets', function (require) {
 
         _rowClicked: function (e) {
             e.preventDefault();
-            const tableName = this.state.name;
             const recordId = $(e.target).data('id');
-            this.trigger_up(tableName + '_row_clicked', { id: recordId });
+            this.trigger('row_clicked', recordId);
         }
     });
 
@@ -69,11 +67,17 @@ odoo.define('jowebutils.widgets', function (require) {
             return this._super();
         },
 
+        setButtons: function (buttons) {
+            this.state.buttons = buttons;
+            this.renderElement();
+            this._attachButtonHandlers();
+        },
+
         _attachButtonHandlers: function () {
             const buttons = this.state.buttons;
             buttons.forEach(button => {
                 this.$("button[name='" + button.name + "']").click(() => {
-                    this.trigger_up(button.name + '_button_clicked');
+                    this.trigger(button.name + '_clicked');
                 })
             });
         },
