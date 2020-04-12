@@ -31,12 +31,24 @@ odoo.define('jowebutils.widgets', function (require) {
         xmlDependencies: ['/jowebutils/static/src/xml/widgets.xml'],
         template: 'jowebutils.table',
 
-        init: function (parent, columns, data) {
+        events: {
+            'click a.table-row-link': '_rowClicked'
+        },
+
+        init: function (parent, name, columns, data) {
             this.state = {
+                name,
                 columns,
                 data
             }
             return this._super(parent);
+        },
+
+        _rowClicked: function (e) {
+            e.preventDefault();
+            const tableName = this.state.name;
+            const recordId = $(e.target).data('id');
+            this.trigger_up(tableName + '_row_clicked', { id: recordId });
         }
     });
 
@@ -49,7 +61,22 @@ odoo.define('jowebutils.widgets', function (require) {
                 buttons
             }
             return this._super(parent);
-        }
+        },
+
+        start: function () {
+            // attach button events
+            this._attachButtonHandlers()
+            return this._super();
+        },
+
+        _attachButtonHandlers: function () {
+            const buttons = this.state.buttons;
+            buttons.forEach(button => {
+                this.$("button[name='" + button.name + "']").click(() => {
+                    this.trigger_up(button.name + '_button_clicked');
+                })
+            });
+        },
     });
 
     return {

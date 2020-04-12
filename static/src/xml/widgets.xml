@@ -62,7 +62,7 @@
                 </tr>
                 <tr t-foreach="state.data" t-as="row">
                     <td t-foreach="cols" t-as="col">
-                        <t t-if="col_first"><a href="/"><t t-esc="row[col.name]" /></a></t>
+                        <t t-if="col_first"><a class="table-row-link" href="" t-att-data-id="row.id"><t t-esc="row[col.name]" /></a></t>
                         <t t-else=""><t t-esc="row[col.name]" /></t>
                     </td>
                 </tr>
@@ -85,7 +85,11 @@
         <t t-set="buttons" t-value="widget.state.buttons" />
         <div style="padding: 15px 5px;">
             <t t-foreach="buttons" t-as="button">
-                <button type="button" t-att-class="'btn ' + (button.class ? button.class : 'btn-primary')"><t t-esc="button.string" /></button>
+                <button
+                    type="button"
+                    t-att-name="button.name"
+                    t-att-class="'btn ' + (button.class ? button.class : 'btn-primary')"
+                ><t t-esc="button.string" /></button>
             </t>
         </div>
     </t>
