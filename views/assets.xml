@@ -4,6 +4,8 @@
     <template id="assets_frontend" name="Junari Web Utils Assets Frontend" inherit_id="website.assets_frontend">
         <xpath expr="." position="inside">
             <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/forms.css"/>
+            <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/widgets.css"/>
+            <script type="text/javascript" src="/jowebutils/static/src/js/loading.js" />
             <script type="text/javascript" src="/jowebutils/static/src/js/forms.js" />
             <script type="text/javascript" src="/jowebutils/static/src/js/widgets.js" />
         </xpath>

@@ -1,0 +1,14 @@
+
+.jowebutils_loading_indicator {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 100px;
+    margin-left: -50px;
+    z-index: 999999;
+    background-color: #7C7BAD;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    border-radius: 0 0 10px 10px;
+}
