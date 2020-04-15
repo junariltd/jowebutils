@@ -10,12 +10,12 @@
             <ol class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
                 <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                 <t t-foreach="state.breadcrumbs" t-as="item">
-                    <t t-if="item.url"><li class="breadcrumb-item"><a t-att-href="item.url"><t t-esc="item.name" /></a></li></t>
-                    <t t-else=""><li class="breadcrumb-item"><t t-esc="item.name" /></li></t>
+                    <t t-if="item.link"><li class="breadcrumb-item"><a class="jonavlink" t-att-data-name="item.name" href=""><t t-esc="item.string" /></a></li></t>
+                    <t t-else=""><li class="breadcrumb-item"><t t-esc="item.string" /></li></t>
                 </t>
             </ol>
 
-            <div class="nav flex-column flex-lg-row ml-auto p-0 mb-3 mb-lg-0 mt-1 mt-lg-0">
+            <!-- <div class="nav flex-column flex-lg-row ml-auto p-0 mb-3 mb-lg-0 mt-1 mt-lg-0">
                 <div t-if="searchbar_sortings" class="form-inline">
                     <span class="small mr-1 navbar-text">Sort By:</span>
                     <div class="btn-group">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </nav>
     </t>
 

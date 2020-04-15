@@ -24,6 +24,11 @@ odoo.define('jowebutils.widgets', function (require) {
                 filterby: 0,
             }
             return this._super(parent);
+        },
+
+        setBreadcrumbs: function (breadcrumbs) {
+            this.state.breadcrumbs = breadcrumbs;
+            this.renderElement();
         }
     });
 
