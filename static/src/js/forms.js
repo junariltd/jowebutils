@@ -30,10 +30,11 @@ odoo.define('jowebutils.forms', function (require) {
     });
 
     const Field = Widget.extend({
-        init: function (parent, field, default_value) {
+        init: function (parent, mode, field, value) {
             this.state = {
+                mode,
                 field,
-                value: default_value
+                value
             }
             return this._super(parent);
         },
@@ -91,9 +92,11 @@ odoo.define('jowebutils.forms', function (require) {
     const WebForm = Widget.extend({
         xmlDependencies: ['/jowebutils/static/src/xml/forms.xml'],
 
-        init: function (parent, fields) {
+        init: function (parent, mode, fields, initial_data) {
             this.state = {
-                fields
+                mode,
+                fields,
+                initial_data,
             }
             this.fieldWidgets = {};
             return this._super(parent)
@@ -101,7 +104,8 @@ odoo.define('jowebutils.forms', function (require) {
         start: function () {
             // Render fields
             this.state.fields.forEach(field => {
-                const widget = new FIELD_TYPE_MAP[field.type](this, field);
+                const fieldValue = this.state.initial_data[field.name];
+                const widget = new FIELD_TYPE_MAP[field.type](this, this.state.mode, field, fieldValue);
                 this.fieldWidgets[field.name] = widget;
                 widget.appendTo(this.$el);
             })

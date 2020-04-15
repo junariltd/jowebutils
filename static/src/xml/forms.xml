@@ -30,12 +30,17 @@
         <t t-set="state" t-value="widget.state" />
         <t t-call="jowebutils.field_template">
             <input
+                t-if="state.mode == 'edit'"
                 type="text"
                 class="form-control"
                 t-att-name="state.field.name"
                 t-att-required="state.field.required"
                 t-att-value="state.value"
             />
+            <span
+                t-if="state.mode == 'view'">
+                <t t-esc="state.value" />
+            </span>
         </t>
     </t>
 
@@ -43,12 +48,17 @@
         <t t-set="state" t-value="widget.state" />
         <t t-call="jowebutils.field_template">
             <input
+                t-if="state.mode == 'edit'"
                 t-att-type="(state.field.type == 'datetime') ? 'datetime-local' : state.field.type"
                 class="form-control"
                 t-att-name="state.field.name"
                 t-att-required="state.field.required"
                 t-att-value="state.value"
             />
+            <span
+                t-if="state.mode == 'view'">
+                <t t-esc="state.value" />
+            </span>
         </t>
     </t>
 
@@ -56,23 +66,34 @@
         <t t-set="state" t-value="widget.state" />
         <t t-call="jowebutils.field_template">
             <textarea
+                t-if="state.mode == 'edit'"
                 class="form-control"
                 t-att-name="state.field.name"
                 t-att-required="state.field.required"
             ><t t-esc="state.value" /></textarea>
+            <span
+                t-if="state.mode == 'view'">
+                <t t-esc="state.value" />
+            </span>
         </t>
     </t>
 
     <t t-name="jowebutils.field_selection">
         <t t-set="state" t-value="widget.state" />
         <t t-call="jowebutils.field_template">
-            <select class="form-control" t-att-name="state.field.name">
+            <select
+                t-if="state.mode == 'edit'"
+                class="form-control" t-att-name="state.field.name">
                 <t t-foreach="state.field.selection" t-as="sel_option">
                     <option t-att-value="sel_option[0]">
                         <t t-esc="sel_option[1]"/>
                     </option>
                 </t>
             </select>
+            <span
+                t-if="state.mode == 'view'">
+                <t t-esc="state.value" />
+            </span>
         </t>
     </t>
 
