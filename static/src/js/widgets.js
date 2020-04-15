@@ -7,6 +7,10 @@ odoo.define('jowebutils.widgets', function (require) {
         xmlDependencies: ['/jowebutils/static/src/xml/widgets.xml'],
         template: 'jowebutils.navbar',
 
+        events: {
+            'click a.breadcrumb-link': '_breadcrumbClicked'
+        },
+
         init: function (parent, breadcrumbs) {
             this.state = {
                 breadcrumbs,
@@ -29,6 +33,12 @@ odoo.define('jowebutils.widgets', function (require) {
         setBreadcrumbs: function (breadcrumbs) {
             this.state.breadcrumbs = breadcrumbs;
             this.renderElement();
+        },
+
+        _breadcrumbClicked: function (e) {
+            e.preventDefault();
+            const name = $(e.target).data('name');
+            this.trigger(name + '_clicked');
         }
     });
 

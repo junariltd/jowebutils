@@ -10,7 +10,7 @@
             <ol class="o_portal_submenu breadcrumb mb-0 py-2 flex-grow-1">
                 <li class="breadcrumb-item"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
                 <t t-foreach="state.breadcrumbs" t-as="item">
-                    <t t-if="item.link"><li class="breadcrumb-item"><a class="jonavlink" t-att-data-name="item.name" href=""><t t-esc="item.string" /></a></li></t>
+                    <t t-if="item.link"><li class="breadcrumb-item"><a class="breadcrumb-link" t-att-data-name="item.name" href=""><t t-esc="item.string" /></a></li></t>
                     <t t-else=""><li class="breadcrumb-item"><t t-esc="item.string" /></li></t>
                 </t>
             </ol>
