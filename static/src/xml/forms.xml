@@ -15,7 +15,7 @@
     </t>
 
     <t t-name="jowebutils.field_template">
-        <div t-att-class="'form-group row joweb-field' + (state.field.required ? ' joweb-field-required' : '')">
+        <div t-att-class="'form-group row joweb-field' + ((state.field.required || state.mode == 'view') ? ' joweb-field-required' : '')">
             <label t-att-for="state.field.name"
                 class="col-sm-4 col-form-label">
                 <t t-esc="state.field.string"/>
@@ -37,10 +37,11 @@
                 t-att-required="state.field.required"
                 t-att-value="state.value"
             />
-            <span
-                t-if="state.mode == 'view'">
+            <div
+                t-if="state.mode == 'view'"
+                class="form-control-plaintext">
                 <t t-esc="state.value" />
-            </span>
+            </div>
         </t>
     </t>
 
@@ -55,10 +56,11 @@
                 t-att-required="state.field.required"
                 t-att-value="state.value"
             />
-            <span
-                t-if="state.mode == 'view'">
+            <div
+                t-if="state.mode == 'view'"
+                class="form-control-plaintext">
                 <t t-esc="state.value" />
-            </span>
+            </div>
         </t>
     </t>
 
@@ -71,10 +73,11 @@
                 t-att-name="state.field.name"
                 t-att-required="state.field.required"
             ><t t-esc="state.value" /></textarea>
-            <span
-                t-if="state.mode == 'view'">
+            <div
+                t-if="state.mode == 'view'"
+                class="form-control-plaintext">
                 <t t-esc="state.value" />
-            </span>
+            </div>
         </t>
     </t>
 
@@ -90,10 +93,11 @@
                     </option>
                 </t>
             </select>
-            <span
-                t-if="state.mode == 'view'">
+            <div
+                t-if="state.mode == 'view'"
+                class="form-control-plaintext">
                 <t t-esc="state.value" />
-            </span>
+            </div>
         </t>
     </t>
 

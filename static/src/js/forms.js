@@ -62,6 +62,11 @@ odoo.define('jowebutils.forms', function (require) {
             }
             return errors;
         },
+        setModeAndValue: function (mode, value) {
+            this.state.mode = mode;
+            this.state.value = value;
+            this.renderElement();
+        },
         setHasError: function (hasError) {
             if (hasError) {
                 this.$el.addClass('joweb-field-has-error')
@@ -118,6 +123,14 @@ odoo.define('jowebutils.forms', function (require) {
                 form_data[field.name] = widget.getValue()
             });
             return form_data;
+        },
+        setModeAndValues: function (mode, values) {
+            this.state.mode = mode;
+            this.state.fields.forEach(field => {
+                const fieldValue = values[field.name];
+                const widget = this.fieldWidgets[field.name];
+                widget.setModeAndValue(mode, fieldValue);
+            });
         },
         validate: function () {
             const errors = [];
