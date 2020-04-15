@@ -62,8 +62,8 @@
                 </tr>
                 <tr t-foreach="state.data" t-as="row">
                     <td t-foreach="cols" t-as="col">
-                        <t t-if="col_first"><a class="table-row-link" href="" t-att-data-id="row.id"><t t-esc="row[col.name]" /></a></t>
-                        <t t-else=""><t t-esc="row[col.name]" /></t>
+                        <t t-if="col_first"><a class="table-row-link" href="" t-att-data-id="row.id"><t t-esc="widget.formatValue(row[col.name])" /></a></t>
+                        <t t-else=""><t t-esc="widget.formatValue(row[col.name])" /></t>
                     </td>
                 </tr>
             </table>

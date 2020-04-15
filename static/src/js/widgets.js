@@ -58,6 +58,13 @@ odoo.define('jowebutils.widgets', function (require) {
             return this._super(parent);
         },
 
+        formatValue: function (value) {
+            if (value instanceof Array && value.length == 2 && !isNaN(value[0])) {
+                return value[1]  // many2one value (id, name). Return name.
+            }
+            return value
+        },
+
         _rowClicked: function (e) {
             e.preventDefault();
             const recordId = $(e.target).data('id');
