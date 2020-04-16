@@ -43,6 +43,11 @@ odoo.define('jowebutils.forms', function (require) {
                 const control = this.$('select').first();
                 return control.val();
             }
+            else if (this.state.field.type == 'many2one') {
+                const control = this.$('select').first();
+                const val = control.val();
+                return val ? parseInt(val) : null;
+            }
             else if (this.state.field.type == 'text') {
                 const control = this.$('textarea').first();
                 return control.val();
@@ -68,6 +73,9 @@ odoo.define('jowebutils.forms', function (require) {
             this.renderElement();
         },
         formatValue: function (value) {
+            if (this.state.field.type != 'boolean' && !value) {
+                return '';
+            }
             if (value instanceof Array && value.length == 2 && !isNaN(value[0])) {
                 return value[1]  // many2one value (id, name). Return name.
             }

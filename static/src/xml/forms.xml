@@ -72,7 +72,8 @@
                 class="form-control"
                 t-att-name="state.field.name"
                 t-att-required="state.field.required"
-            ><t t-esc="state.value" /></textarea>
+                rows="4"
+                ><t t-esc="state.value" /></textarea>
             <div
                 t-if="state.mode == 'view'"
                 class="form-control-plaintext"
