@@ -67,6 +67,12 @@ odoo.define('jowebutils.forms', function (require) {
             this.state.value = value;
             this.renderElement();
         },
+        formatValue: function (value) {
+            if (value instanceof Array && value.length == 2 && !isNaN(value[0])) {
+                return value[1]  // many2one value (id, name). Return name.
+            }
+            return value
+        },
         setHasError: function (hasError) {
             if (hasError) {
                 this.$el.addClass('joweb-field-has-error')
@@ -83,6 +89,7 @@ odoo.define('jowebutils.forms', function (require) {
     const TimeField = Field.extend({ template: 'jowebutils.field_datetime' });
     const TextField = Field.extend({ template: 'jowebutils.field_text' });
     const SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
+    const Many2OneField = SelectionField.extend();
 
     // TODO: Convert to registry
     const FIELD_TYPE_MAP = {
@@ -91,7 +98,8 @@ odoo.define('jowebutils.forms', function (require) {
         'date': DateField,
         'time': TimeField,
         'text': TextField,
-        'selection': SelectionField
+        'selection': SelectionField,
+        'many2one': Many2OneField
     }
 
     const WebForm = Widget.extend({
@@ -124,13 +132,16 @@ odoo.define('jowebutils.forms', function (require) {
             });
             return form_data;
         },
-        setModeAndValues: function (mode, values) {
-            this.state.mode = mode;
+        setValues: function (values) {
             this.state.fields.forEach(field => {
                 const fieldValue = values[field.name];
                 const widget = this.fieldWidgets[field.name];
-                widget.setModeAndValue(mode, fieldValue);
+                widget.setModeAndValue(this.state.mode, fieldValue);
             });
+        },
+        setModeAndValues: function (mode, values) {
+            this.state.mode = mode;
+            this.setValues(values);
         },
         validate: function () {
             const errors = [];

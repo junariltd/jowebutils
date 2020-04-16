@@ -40,7 +40,7 @@
             <div
                 t-if="state.mode == 'view'"
                 class="form-control-plaintext">
-                <t t-esc="state.value" />
+                <t t-esc="widget.formatValue(state.value)" />
             </div>
         </t>
     </t>
@@ -59,7 +59,7 @@
             <div
                 t-if="state.mode == 'view'"
                 class="form-control-plaintext">
-                <t t-esc="state.value" />
+                <t t-esc="widget.formatValue(state.value)" />
             </div>
         </t>
     </t>
@@ -75,9 +75,9 @@
             ><t t-esc="state.value" /></textarea>
             <div
                 t-if="state.mode == 'view'"
-                class="form-control-plaintext">
-                <t t-esc="state.value" />
-            </div>
+                class="form-control-plaintext"
+                style="white-space: pre-line;"
+                ><t t-esc="widget.formatValue(state.value)" /></div>
         </t>
     </t>
 
@@ -96,7 +96,7 @@
             <div
                 t-if="state.mode == 'view'"
                 class="form-control-plaintext">
-                <t t-esc="state.value" />
+                <t t-esc="widget.formatValue(state.value)" />
             </div>
         </t>
     </t>
