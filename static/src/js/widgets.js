@@ -65,6 +65,11 @@ odoo.define('jowebutils.widgets', function (require) {
             return value
         },
 
+        updateData: function (newData) {
+            this.state.data = newData;
+            this.renderElement();
+        },
+
         _rowClicked: function (e) {
             e.preventDefault();
             const recordId = $(e.target).data('id');
