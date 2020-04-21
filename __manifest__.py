@@ -7,6 +7,7 @@
     'website': 'https://www.junari.com',
     'images': [],
     'depends': [
+        'website'
     ],
     'data': [
         'views/assets.xml'
