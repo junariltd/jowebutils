@@ -13,7 +13,7 @@ odoo.define('jowebutils.router', function (require) {
         init: function (parent) {
             this.state = {
                 routes: [],
-                routeWidgets: [],
+                routeWidgets: {},
             }
             return this._super(parent)
         },
@@ -31,12 +31,16 @@ odoo.define('jowebutils.router', function (require) {
             // Route to current URL
             const l = window.location;
             const currentUrl = l.pathname + l.search;
-            $.router.set(currentUrl);
+            this.go(currentUrl);
             return this._super();
         },
 
+        go: function (url) {
+            $.router.set(url);
+        },
+
         _routeChange: function (url) {
-            let routeWidget = this.state.routeWidgets[url]
+            let routeWidget = this.state.routeWidgets[url];
             let routePromise = Promise.resolve();
             if (!routeWidget) {
                 const route = this.state.routes.find(r => r.url == url)
@@ -44,7 +48,8 @@ odoo.define('jowebutils.router', function (require) {
                     alert('url ' + url + ' not found.'); // FIXME
                     return;
                 }
-                routeWidget = new route.widget(this);
+                routeWidget = new route.widget(this, ...route.initArgs);
+                this.state.routeWidgets[url] = routeWidget;
                 routePromise = routeWidget.appendTo(this.$el);
             }
             return routePromise
@@ -54,7 +59,7 @@ odoo.define('jowebutils.router', function (require) {
                     }
                 })
                 .then(() => {
-                    this.state.routeWidgets.forEach(widget => {
+                    Object.values(this.state.routeWidgets).forEach(widget => {
                         if (widget != routeWidget) {
                             widget.do_hide();
                         }
