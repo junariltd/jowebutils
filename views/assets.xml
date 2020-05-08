@@ -7,6 +7,7 @@
             <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/widgets.css"/>
             <script type="text/javascript" src="/jowebutils/static/src/js/loading.js" />
             <script type="text/javascript" src="/jowebutils/static/src/js/forms.js" />
+            <script type="text/javascript" src="/jowebutils/static/src/js/router.js" />
             <script type="text/javascript" src="/jowebutils/static/src/js/widgets.js" />
         </xpath>
     </template>
