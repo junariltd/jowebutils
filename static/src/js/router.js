@@ -11,15 +11,16 @@ odoo.define('jowebutils.router', function (require) {
         ],
 
         init: function (parent) {
-            this.state = {
-                routes: [],
-                routeWidgets: {},
-            }
+            const loc = window.location;
+            this.host = loc.protocol + '//' + loc.hostname;
+            this.currentUrl = null;
+            this.routes = [];
+            this.routeWidgets = {};
             return this._super(parent)
         },
 
         addRoute: function (routeDef) {
-            this.state.routes.push(routeDef);
+            this.routes.push(routeDef);
         },
 
         start: function () {
@@ -29,9 +30,9 @@ odoo.define('jowebutils.router', function (require) {
                 this._routeChange(e.route);
             });
             // Route to current URL
-            const l = window.location;
-            const currentUrl = l.pathname + l.search;
-            this.go(currentUrl);
+            const loc = window.location;
+            const url = loc.pathname + loc.search + loc.hash;
+            this.go(url);
             return this._super();
         },
 
@@ -40,16 +41,18 @@ odoo.define('jowebutils.router', function (require) {
         },
 
         _routeChange: function (url) {
-            let routeWidget = this.state.routeWidgets[url];
+            this.currentUrl = new URL(this.host + url);
+            const path = this.currentUrl.pathname;
+            let routeWidget = this.routeWidgets[path];
             let routePromise = Promise.resolve();
             if (!routeWidget) {
-                const route = this.state.routes.find(r => r.url == url)
+                const route = this.routes.find(r => r.path == path)
                 if (!route) {
-                    alert('url ' + url + ' not found.'); // FIXME
+                    alert('Route "' + path + '" not found.'); // FIXME
                     return;
                 }
                 routeWidget = new route.widget(this, ...route.initArgs);
-                this.state.routeWidgets[url] = routeWidget;
+                this.routeWidgets[path] = routeWidget;
                 routePromise = routeWidget.appendTo(this.$el);
             }
             return routePromise
@@ -59,7 +62,7 @@ odoo.define('jowebutils.router', function (require) {
                     }
                 })
                 .then(() => {
-                    Object.values(this.state.routeWidgets).forEach(widget => {
+                    Object.values(this.routeWidgets).forEach(widget => {
                         if (widget != routeWidget) {
                             widget.do_hide();
                         }
