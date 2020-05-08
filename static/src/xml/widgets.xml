@@ -71,13 +71,17 @@
     </t>
 
     <t t-name="jowebutils.record_layout">
-        <div class="card mt-0 border-top-0 rounded-0 rounded-bottom">
-            <div t-if="card_header" t-attf-class="card-header">
-                <t t-raw="card_header"/>
+        <div>
+            <t t-raw="before_card" />
+            <div class="card mt-0 border-top-0 rounded-0 rounded-bottom">
+                <div t-if="card_header" t-attf-class="card-header">
+                    <t t-raw="card_header"/>
+                </div>
+                <div t-if="card_body" t-attf-class="card-body">
+                    <t t-raw="card_body"/>
+                </div>
             </div>
-            <div t-if="card_body" t-attf-class="card-body">
-                <t t-raw="card_body"/>
-            </div>
+            <t t-raw="after_card" />
         </div>
     </t>
 
