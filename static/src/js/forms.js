@@ -96,6 +96,7 @@ odoo.define('jowebutils.forms', function (require) {
     const DateField = Field.extend({ template: 'jowebutils.field_datetime' });
     const TimeField = Field.extend({ template: 'jowebutils.field_datetime' });
     const TextField = Field.extend({ template: 'jowebutils.field_text' });
+    const HtmlField = Field.extend({ template: 'jowebutils.field_html' });
     const SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
     const Many2OneField = SelectionField.extend();
 
@@ -106,6 +107,7 @@ odoo.define('jowebutils.forms', function (require) {
         'date': DateField,
         'time': TimeField,
         'text': TextField,
+        'html': HtmlField,
         'selection': SelectionField,
         'many2one': Many2OneField
     }
