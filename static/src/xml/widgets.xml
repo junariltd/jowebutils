@@ -56,7 +56,7 @@
         <t t-set="state" t-value="widget.state" />
         <t t-set="cols" t-value="state.columns" />
         <div class="table-responsive border rounded border-top-0">
-            <table class="table rounded mb-0 bg-white o_portal_my_doc_table">
+            <table class="table rounded mb-0 bg-white o_portal_my_doc_table jowebutils-table">
                 <tr>
                     <th t-foreach="cols" t-as="col"><t t-esc="col.string" /></th>
                 </tr>

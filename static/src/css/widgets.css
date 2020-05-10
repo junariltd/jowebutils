@@ -12,3 +12,8 @@
     text-align: center;
     border-radius: 0 0 10px 10px;
 }
+
+.o_portal_wrap .o_portal_my_doc_table.jowebutils-table td {
+    white-space: normal;
+    vertical-align: top;
+}
