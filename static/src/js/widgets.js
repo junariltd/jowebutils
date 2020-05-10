@@ -11,7 +11,8 @@ odoo.define('jowebutils.widgets', function (require) {
             'click a.breadcrumb-link': '_breadcrumbClicked'
         },
 
-        init: function (parent, breadcrumbs) {
+        init: function (parent, router, breadcrumbs) {
+            this.router = router;
             this.state = {
                 breadcrumbs,
                 searchbar_sortings: [
@@ -38,7 +39,10 @@ odoo.define('jowebutils.widgets', function (require) {
         _breadcrumbClicked: function (e) {
             e.preventDefault();
             const name = $(e.target).data('name');
-            this.trigger(name + '_clicked');
+            const breadcrumb = this.state.breadcrumbs.find(b => b.name == name);
+            if (breadcrumb.link) {
+                this.router.go(breadcrumb.link)
+            }
         }
     });
 
