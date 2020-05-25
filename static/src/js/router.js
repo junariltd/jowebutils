@@ -25,9 +25,9 @@ odoo.define('jowebutils.router', function (require) {
 
         start: function () {
             // Register router
-            $.route('*', (e) => {
-                console.log('routed to', e.route);
-                this._routeChange(e.route);
+            $.route('*', (e, params, query) => {
+                console.log('routed to', e.route + this.objectToQueryString(query));
+                this._routeChange(e.route, query);
             });
             // Route to current URL
             const loc = window.location;
@@ -37,12 +37,24 @@ odoo.define('jowebutils.router', function (require) {
         },
 
         go: function (url) {
-            $.router.set(url);
+            const newUrl = new URL(this.host + url);
+            const newPath = newUrl.pathname
+            const newQuery = newUrl.search ? newUrl.search.substr(1) : ''
+            $.router.set({
+                route: newPath,
+                queryString: newQuery
+            });
         },
 
-        _routeChange: function (url) {
-            this.currentUrl = new URL(this.host + url);
-            const path = this.currentUrl.pathname;
+        objectToQueryString: function (params) {
+            if (!params) return '';
+            return '?' + Object.keys(params).map((key) =>
+                encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
+            ).join('&');
+        },
+
+        _routeChange: function (path, query) {
+            this.currentUrl = new URL(this.host + path + this.objectToQueryString(query));
             let routeWidget = this.routeWidgets[path];
             let routePromise = Promise.resolve();
             if (!routeWidget) {
