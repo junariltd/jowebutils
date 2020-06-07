@@ -94,7 +94,7 @@
                 ><t t-esc="state.value" /></textarea>
             <div
                 t-if="state.mode == 'view'"
-                class="form-control-plaintext"
+                class="form-control-plaintext joweb-html-field-content"
                 ><t t-raw="widget.formatValue(state.value)" /></div>
         </t>
     </t>

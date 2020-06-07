@@ -14,3 +14,7 @@
 .joweb-field.joweb-field-has-error .form-control {
     border-color: #dc3545;
 }
+
+.joweb-html-field-content p {
+    margin: 0;
+}
