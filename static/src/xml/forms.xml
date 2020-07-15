@@ -106,7 +106,8 @@
                 t-if="state.mode == 'edit'"
                 class="form-control" t-att-name="state.field.name">
                 <t t-foreach="state.field.selection" t-as="sel_option">
-                    <option t-att-value="sel_option[0]">
+                    <option t-att-value="sel_option[0]"
+                        t-att-selected="sel_option[0] == state.value ? 'selected' : None">
                         <t t-esc="sel_option[1]"/>
                     </option>
                 </t>
