@@ -39,9 +39,15 @@ odoo.define('jowebutils.widgets', function (require) {
         _breadcrumbClicked: function (e) {
             e.preventDefault();
             const name = $(e.target).data('name');
+            const external = $(e.target).data('external');
             const breadcrumb = this.state.breadcrumbs.find(b => b.name == name);
             if (breadcrumb.link) {
-                this.router.go(breadcrumb.link)
+                if (external) {
+                    window.location = breadcrumb.link;
+                }
+                else {
+                    this.router.go(breadcrumb.link)
+                }
             }
         }
     });
