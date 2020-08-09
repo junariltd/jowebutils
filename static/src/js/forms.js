@@ -149,6 +149,10 @@ odoo.define('jowebutils.forms', function (require) {
                 widget.setModeAndValue(this.state.mode, fieldValue);
             });
         },
+        setValue: function (field_name, value) {
+            const widget = this.fieldWidgets[field_name];
+            widget.setModeAndValue(this.state.mode, value);
+        },
         setModeAndValues: function (mode, values) {
             this.state.mode = mode;
             this.setValues(values);
