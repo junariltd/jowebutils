@@ -76,7 +76,12 @@ odoo.define('jowebutils.forms', function (require) {
             if (this.state.field.type != 'boolean' && !value) {
                 return '';
             }
-            if (value instanceof Array && value.length == 2 && !isNaN(value[0])) {
+            else if (this.state.field.type == 'selection' && value) {
+                const match = this.state.field.selection.find((s) => s[0] == value)
+                if (!match) return value;
+                return match[1];
+            }
+            else if (value instanceof Array && value.length == 2 && !isNaN(value[0])) {
                 return value[1]  // many2one value (id, name). Return name.
             }
             return value
