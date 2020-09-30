@@ -99,6 +99,17 @@ odoo.define('jowebutils.forms', function (require) {
             if (this.state.field.tooltip) {
                 this.$el.find('[data-toggle="tooltip"]').tooltip();
             }
+            const onChange = this.state.field.onChange;
+            if (onChange) {
+                if (this.state.field.type == 'selection') {
+                    const control = this.$('select').first();
+                    control.change(onChange);
+                }
+                else {
+                    const control = this.$('input').first();
+                    control.change(onChange);
+                }
+            }
         }
     });
 
