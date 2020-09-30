@@ -15,7 +15,9 @@
     </t>
 
     <t t-name="jowebutils.field_template">
-        <div t-att-class="'form-group row joweb-field' + ((state.field.required || state.mode == 'view') ? ' joweb-field-required' : '')">
+        <div t-att-class="'form-group row joweb-field'
+                + ((state.field.required || state.mode == 'view') ? ' joweb-field-required' : '')
+                + (state.field.invisible ? ' d-none' : '')">
             <label t-att-for="state.field.name"
                 class="col-sm-4 col-form-label"
                 t-att-data-toggle="state.field.tooltip ? 'tooltip' : ''"
