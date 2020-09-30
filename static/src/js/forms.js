@@ -146,6 +146,7 @@ odoo.define('jowebutils.forms', function (require) {
             this.fieldWidgets = {};
             return this._super(parent)
         },
+
         start: function () {
             // Render fields
             this.state.fields.forEach(field => {
@@ -156,6 +157,7 @@ odoo.define('jowebutils.forms', function (require) {
             })
             return this._super();
         },
+
         getValues: function () {
             const form_data = {};
             this.state.fields.forEach(field => {
@@ -167,6 +169,7 @@ odoo.define('jowebutils.forms', function (require) {
         getValue: function (field_name) {
             return this.fieldWidgets[field_name].getValue();
         },
+
         setValues: function (values) {
             this.state.fields.forEach(field => {
                 const fieldValue = values[field.name];
@@ -182,6 +185,13 @@ odoo.define('jowebutils.forms', function (require) {
             this.state.mode = mode;
             this.setValues(values);
         },
+
+        updateFieldAttrs: function (field_name, attrs) {
+            const field = this.state.fields.find(f => f.name == field_name);
+            Object.assign(field, attrs);
+            this.fieldWidgets[field_name].renderElement();
+        },
+
         validate: function () {
             const errors = [];
             this.state.fields.forEach(field => {
