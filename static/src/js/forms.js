@@ -164,6 +164,9 @@ odoo.define('jowebutils.forms', function (require) {
             });
             return form_data;
         },
+        getValue: function (field_name) {
+            return this.fieldWidgets[field_name].getValue();
+        },
         setValues: function (values) {
             this.state.fields.forEach(field => {
                 const fieldValue = values[field.name];
