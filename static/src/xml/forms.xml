@@ -18,9 +18,9 @@
         <div t-att-class="'form-group row joweb-field' + ((state.field.required || state.mode == 'view') ? ' joweb-field-required' : '')">
             <label t-att-for="state.field.name"
                 class="col-sm-4 col-form-label"
-                t-att-data-toggle="state.tooltip ? 'tooltip' : ''"
-                t-att-data-placement="state.tooltip ? 'top' : ''"
-                t-att-title="state.tooltip">
+                t-att-data-toggle="state.field.tooltip ? 'tooltip' : ''"
+                t-att-data-placement="state.field.tooltip ? 'top' : ''"
+                t-att-title="state.field.tooltip">
                 <t t-esc="state.field.string"/>
             </label>
             <div class="col-sm-8">

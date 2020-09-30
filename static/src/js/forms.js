@@ -30,12 +30,11 @@ odoo.define('jowebutils.forms', function (require) {
     });
 
     const Field = Widget.extend({
-        init: function (parent, mode, field, value, tooltip) {
+        init: function (parent, mode, field, value) {
             this.state = {
                 mode,
                 field,
-                value,
-                tooltip
+                value
             }
             return this._super(parent);
         },
@@ -95,9 +94,9 @@ odoo.define('jowebutils.forms', function (require) {
                 this.$el.removeClass('joweb-field-has-error')
             }
         },
-        renderElement: function() {
+        renderElement: function () {
             this._super();
-            if (this.state.tooltip) {
+            if (this.state.field.tooltip) {
                 this.$el.find('[data-toggle="tooltip"]').tooltip();
             }
         }
@@ -140,7 +139,7 @@ odoo.define('jowebutils.forms', function (require) {
             // Render fields
             this.state.fields.forEach(field => {
                 const fieldValue = this.state.initial_data[field.name];
-                const widget = new FIELD_TYPE_MAP[field.type](this, this.state.mode, field, fieldValue, field.tooltip);
+                const widget = new FIELD_TYPE_MAP[field.type](this, this.state.mode, field, fieldValue);
                 this.fieldWidgets[field.name] = widget;
                 widget.appendTo(this.$el);
             })
