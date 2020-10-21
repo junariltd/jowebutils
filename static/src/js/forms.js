@@ -67,8 +67,11 @@ odoo.define('jowebutils.forms', function (require) {
             }
             return errors;
         },
-        setModeAndValue: function (mode, value) {
+        setMode: function (mode) {
             this.state.mode = mode;
+            this.renderElement();
+        },
+        setValue: function (value) {
             this.state.value = value;
             this.renderElement();
         },
@@ -174,16 +177,20 @@ odoo.define('jowebutils.forms', function (require) {
             this.state.fields.forEach(field => {
                 const fieldValue = values[field.name];
                 const widget = this.fieldWidgets[field.name];
-                widget.setModeAndValue(this.state.mode, fieldValue);
+                widget.setValue(fieldValue);
             });
         },
         setValue: function (field_name, value) {
             const widget = this.fieldWidgets[field_name];
-            widget.setModeAndValue(this.state.mode, value);
+            widget.setValue(value);
         },
-        setModeAndValues: function (mode, values) {
+
+        setMode: function (mode) {
             this.state.mode = mode;
-            this.setValues(values);
+            this.state.fields.forEach(field => {
+                const widget = this.fieldWidgets[field.name];
+                widget.setMode(mode);
+            });
         },
 
         updateFieldAttrs: function (field_name, attrs) {
