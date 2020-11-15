@@ -84,6 +84,9 @@ odoo.define('jowebutils.forms', function (require) {
                 if (!match) return value;
                 return match[1];
             }
+            else if (this.state.field.type == 'datetime' && value) {
+                return new Date(value).toLocaleString();
+            }
             else if (value instanceof Array && value.length == 2 && !isNaN(value[0])) {
                 return value[1]  // many2one value (id, name). Return name.
             }
