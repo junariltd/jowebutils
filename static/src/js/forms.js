@@ -30,12 +30,11 @@ odoo.define('jowebutils.forms', function (require) {
     });
 
     const Field = Widget.extend({
-        init: function (parent, mode, field, value, tooltip) {
+        init: function (parent, mode, field, value) {
             this.state = {
                 mode,
                 field,
-                value,
-                tooltip
+                value
             }
             return this._super(parent);
         },
@@ -68,8 +67,11 @@ odoo.define('jowebutils.forms', function (require) {
             }
             return errors;
         },
-        setModeAndValue: function (mode, value) {
+        setMode: function (mode) {
             this.state.mode = mode;
+            this.renderElement();
+        },
+        setValue: function (value) {
             this.state.value = value;
             this.renderElement();
         },
@@ -81,6 +83,9 @@ odoo.define('jowebutils.forms', function (require) {
                 const match = this.state.field.selection.find((s) => s[0] == value)
                 if (!match) return value;
                 return match[1];
+            }
+            else if (this.state.field.type == 'datetime' && value) {
+                return new Date(value).toLocaleString();
             }
             else if (value instanceof Array && value.length == 2 && !isNaN(value[0])) {
                 return value[1]  // many2one value (id, name). Return name.
@@ -95,10 +100,21 @@ odoo.define('jowebutils.forms', function (require) {
                 this.$el.removeClass('joweb-field-has-error')
             }
         },
-        renderElement: function() {
+        renderElement: function () {
             this._super();
-            if (this.state.tooltip) {
+            if (this.state.field.tooltip) {
                 this.$el.find('[data-toggle="tooltip"]').tooltip();
+            }
+            const onChange = this.state.field.onChange;
+            if (onChange) {
+                if (this.state.field.type == 'selection') {
+                    const control = this.$('select').first();
+                    control.change(onChange);
+                }
+                else {
+                    const control = this.$('input').first();
+                    control.change(onChange);
+                }
             }
         }
     });
@@ -142,16 +158,18 @@ odoo.define('jowebutils.forms', function (require) {
             this.fieldWidgets = {};
             return this._super(parent)
         },
+
         start: function () {
             // Render fields
             this.state.fields.forEach(field => {
                 const fieldValue = this.state.initial_data[field.name];
-                const widget = new FIELD_TYPE_MAP[field.type](this, this.state.mode, field, fieldValue, field.tooltip);
+                const widget = new FIELD_TYPE_MAP[field.type](this, this.state.mode, field, fieldValue);
                 this.fieldWidgets[field.name] = widget;
                 widget.appendTo(this.$el);
             })
             return this._super();
         },
+
         getValues: function () {
             const form_data = {};
             this.state.fields.forEach(field => {
@@ -160,21 +178,36 @@ odoo.define('jowebutils.forms', function (require) {
             });
             return form_data;
         },
+        getValue: function (field_name) {
+            return this.fieldWidgets[field_name].getValue();
+        },
+
         setValues: function (values) {
             this.state.fields.forEach(field => {
                 const fieldValue = values[field.name];
                 const widget = this.fieldWidgets[field.name];
-                widget.setModeAndValue(this.state.mode, fieldValue);
+                widget.setValue(fieldValue);
             });
         },
         setValue: function (field_name, value) {
             const widget = this.fieldWidgets[field_name];
-            widget.setModeAndValue(this.state.mode, value);
+            widget.setValue(value);
         },
-        setModeAndValues: function (mode, values) {
+
+        setMode: function (mode) {
             this.state.mode = mode;
-            this.setValues(values);
+            this.state.fields.forEach(field => {
+                const widget = this.fieldWidgets[field.name];
+                widget.setMode(mode);
+            });
         },
+
+        updateFieldAttrs: function (field_name, attrs) {
+            const field = this.state.fields.find(f => f.name == field_name);
+            Object.assign(field, attrs);
+            this.fieldWidgets[field_name].renderElement();
+        },
+
         validate: function () {
             const errors = [];
             this.state.fields.forEach(field => {
