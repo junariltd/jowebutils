@@ -110,7 +110,10 @@ odoo.define('jowebutils.forms', function (require) {
     const TextField = Field.extend({ template: 'jowebutils.field_text' });
     const HtmlField = Field.extend({ template: 'jowebutils.field_html' });
     const SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
+    const NumberField = Field.extend({template: 'jowebutils.field_number'});
     const Many2OneField = SelectionField.extend();
+    const One2ManyField = SelectionField.extend();
+    const Many2ManyField = SelectionField.extend();
 
     // TODO: Convert to registry
     const FIELD_TYPE_MAP = {
@@ -121,7 +124,10 @@ odoo.define('jowebutils.forms', function (require) {
         'text': TextField,
         'html': HtmlField,
         'selection': SelectionField,
-        'many2one': Many2OneField
+        'many2one': Many2OneField,
+        'one2many': One2ManyField,
+        'many2many': Many2ManyField,
+        'number': NumberField
     }
 
     const WebForm = Widget.extend({

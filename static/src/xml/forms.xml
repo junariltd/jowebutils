@@ -48,6 +48,25 @@
         </t>
     </t>
 
+    <t t-name="jowebutils.field_number">
+        <t t-set="state" t-value="widget.state" />
+        <t t-call="jowebutils.field_template">
+            <input
+                t-if="state.mode == 'edit'"
+                type="number"
+                class="form-control"
+                t-att-name="state.field.name"
+                t-att-required="state.field.required"
+                t-att-value="state.value"
+            />
+            <div
+                t-if="state.mode == 'view'"
+                class="form-control-plaintext">
+                <t t-esc="widget.formatValue(state.value)" />
+            </div>
+        </t>
+    </t>
+
     <t t-name="jowebutils.field_datetime">
         <t t-set="state" t-value="widget.state" />
         <t t-call="jowebutils.field_template">
