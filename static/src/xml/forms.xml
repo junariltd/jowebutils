@@ -15,10 +15,10 @@
     </t>
 
     <t t-name="jowebutils.field_template">
-        <div t-att-class="'form-group row joweb-field'
+        <div t-att-class="state.field.type != 'hidden' ? 'form-group row joweb-field' : ''
                 + ((state.field.required || state.mode == 'view') ? ' joweb-field-required' : '')
                 + (state.field.invisible ? ' d-none' : '')">
-            <label t-att-for="state.field.name"
+            <label t-if="state.field.type != 'hidden'" t-att-for="state.field.name"
                 class="col-sm-4 col-form-label"
                 t-att-data-toggle="state.field.tooltip ? 'tooltip' : ''"
                 t-att-data-placement="state.field.tooltip ? 'top' : ''"
@@ -129,10 +129,11 @@
             <select
                 t-if="state.mode == 'edit'"
                 class="form-control" t-att-name="state.field.name">
-                <option value=""></option>
+                <t t-log="state"/>
+                <option t-if="!state.field.required" value=""></option>
                 <t t-foreach="state.field.selection" t-as="sel_option">
                     <option t-att-value="sel_option[0]"
-                        t-att-selected="sel_option[0] == state.value ? 'selected' : None">
+                        t-att-selected="sel_option[0] == state.value ? 'selected' : state.value != null &amp;&amp; state.value.length == 2 &amp;&amp; sel_option[0] == state.value[0] ? 'selected' : None">
                         <t t-esc="sel_option[1]"/>
                     </option>
                 </t>
@@ -142,6 +143,19 @@
                 class="form-control-plaintext">
                 <t t-esc="widget.formatValue(state.value)" />
             </div>
+        </t>
+    </t>
+
+    <t t-name="jowebutils.field_hidden">
+        <t t-set="state" t-value="widget.state" />
+        <t t-call="jowebutils.field_template">
+            <input
+                t-if="state.mode == 'edit'"
+                type="hidden"
+                t-att-name="state.field.name"
+                t-att-required="state.field.required"
+                t-att-value="state.value"
+            />
         </t>
     </t>
 

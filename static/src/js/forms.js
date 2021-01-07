@@ -52,6 +52,10 @@ odoo.define('jowebutils.forms', function (require) {
                 const control = this.$('textarea').first();
                 return control.val();
             }
+            else if (this.state.field.type == 'html') {
+                const control = this.$('textarea').first();
+                return control.val();
+            }
             else {
                 const control = this.$('input').first();
                 return control.val();
@@ -125,6 +129,7 @@ odoo.define('jowebutils.forms', function (require) {
     const TimeField = Field.extend({ template: 'jowebutils.field_datetime' });
     const TextField = Field.extend({ template: 'jowebutils.field_text' });
     const HtmlField = Field.extend({ template: 'jowebutils.field_html' });
+    const HiddenField = Field.extend({ template: 'jowebutils.field_hidden' });
     const SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
     const NumberField = Field.extend({template: 'jowebutils.field_number'});
     const Many2OneField = SelectionField.extend();
@@ -143,7 +148,8 @@ odoo.define('jowebutils.forms', function (require) {
         'many2one': Many2OneField,
         'one2many': One2ManyField,
         'many2many': Many2ManyField,
-        'number': NumberField
+        'number': NumberField,
+        'hidden': HiddenField
     }
 
     const WebForm = Widget.extend({
