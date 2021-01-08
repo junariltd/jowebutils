@@ -5,6 +5,9 @@ odoo.define('jowebutils.forms', function (require) {
     const qweb = core.qweb;
     // const ajax = require('web.ajax');
     const Widget = require('web.Widget');
+    const weDefaultOptions = require('web_editor.wysiwyg.default_options');
+    const wysiwygLoader = require('web_editor.loader');
+    var publicWidget = require('web.public.widget');
 
     // const _t = core._t;
 
@@ -29,7 +32,7 @@ odoo.define('jowebutils.forms', function (require) {
         }
     });
 
-    const Field = Widget.extend({
+    const Field = publicWidget.Widget.extend({
         init: function (parent, mode, field, value) {
             this.state = {
                 mode,
@@ -124,6 +127,55 @@ odoo.define('jowebutils.forms', function (require) {
                 else {
                     const control = this.$('input').first();
                     control.change(onChange);
+                }
+            }
+
+            if (this.state.field.type == "html") {
+                const textarea = this.$('textarea.o_wysiwyg_loader').first();
+                if (textarea && textarea.length > 0) {
+                    var $textarea = $(textarea);
+                    var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
+                    var $form = $(document);
+                    var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
+                    var toolbar = [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                    ];
+                    if (hasFullEdit) {
+                        toolbar.push(['insert', ['linkPlugin', 'mediaPlugin']]);
+                    }
+                    toolbar.push(['history', ['undo', 'redo']]);
+        
+                    var options = {
+                        height: 200,
+                        minHeight: 80,
+                        toolbar: toolbar,
+                        styleWithSpan: false,
+                        styleTags: _.without(weDefaultOptions.styleTags, 'h1', 'h2', 'h3'),
+                        recordInfo: {
+                            context: this._getContext(),
+                            res_model: 'project.task.remark',
+                            res_id: +window.location.pathname.split('-').pop(),
+                        },
+                    };
+                    if (!hasFullEdit) {
+                        options.plugins = {
+                            LinkPlugin: false,
+                            MediaPlugin: false,
+                        };
+                    }
+                    wysiwygLoader.load(this, $textarea[0], options).then(wysiwyg => {
+                        $form.on('click', '', (e) => {
+                            let insideEditor = $(e.target).closest("odoo-wysiwyg-container").length > 0;
+                            if (!insideEditor) {
+                                wysiwyg.save().then(val => {
+                                    this.setValue(val.html);
+                                });
+                            }
+                        });
+                    });
                 }
             }
         }

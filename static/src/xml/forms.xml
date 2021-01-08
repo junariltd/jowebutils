@@ -111,7 +111,7 @@
         <t t-call="jowebutils.field_template">
             <textarea
                 t-if="state.mode == 'edit'"
-                class="form-control"
+                class="form-control o_wysiwyg_loader"
                 t-att-name="state.field.name"
                 t-att-required="state.field.required"
                 rows="4"
