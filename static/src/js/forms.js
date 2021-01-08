@@ -1,6 +1,7 @@
 odoo.define('jowebutils.forms', function (require) {
     'use strict';
 
+    const ajax = require('web.ajax');
     const core = require('web.core');
     const qweb = core.qweb;
     // const ajax = require('web.ajax');
@@ -63,6 +64,12 @@ odoo.define('jowebutils.forms', function (require) {
             else if (this.state.field.type == 'many2one-hidden') {
                 const control = this.$('input').first();
                 const val = control.val().split(",");
+                return val && parseInt(val[0]) ? [parseInt(val[0]), val[1]] : "";
+            }
+            else if (this.state.field.type == 'attachments') {
+                const control = this.$('input').first();
+                const val = control.val().split(",");
+                console.log("VAL", val);
                 return val && parseInt(val[0]) ? [parseInt(val[0]), val[1]] : "";
             }
             else {
@@ -156,7 +163,7 @@ odoo.define('jowebutils.forms', function (require) {
                         styleTags: _.without(weDefaultOptions.styleTags, 'h1', 'h2', 'h3'),
                         recordInfo: {
                             context: this._getContext(),
-                            res_model: 'project.task.remark',
+                            res_model: this.state.field.res_model,
                             res_id: +window.location.pathname.split('-').pop(),
                         },
                     };
@@ -190,6 +197,84 @@ odoo.define('jowebutils.forms', function (require) {
     const HiddenField = Field.extend({ template: 'jowebutils.field_hidden' });
     const SelectionField = Field.extend({ template: 'jowebutils.field_selection' });
     const NumberField = Field.extend({template: 'jowebutils.field_number'});
+    const AttachmentField = Field.extend({
+        template: 'jowebutils.field_attachments',
+        events: {
+            'change .file_input': '_onFileInputChange'
+        },
+        init: function (parent, mode, field, value) {
+            this.fieldOptions = _.defaults(field.options || {}, {
+                'allow_composer': true,
+                'display_composer': false,
+                'csrf_token': odoo.csrf_token,
+                'token': false,
+                'res_model': false,
+                'res_id': false,
+            });
+            this.attachments = [];
+            this._super(parent, mode, field, value);
+        },
+        start: function () {
+            return this._super.apply(this, arguments).then(() => {
+                this.attachmentsSelector = '.attachments';
+                this.attachmentIdsSelector = `[name=${this.state.field.name}]`;
+                this.attachmentTokensSelector = '.attachment_tokens';
+                let value = this.getValue();
+                if (value) {
+                    this.attachments = value || [];
+                    _.each(this.attachments, (attachment) => {
+                        attachment.state = 'done';
+                    });
+                    this._updateAttachments();
+                }
+                return Promise.resolve();
+            });
+        },
+        _onFileInputChange: function () {
+    
+            // this.$sendButton.prop('disabled', true);
+            let self = this;
+            return Promise.all(_.map(this.$('input.file_input')[0].files, (file) => {
+                return new Promise((resolve, reject) => {
+                    console.log("CHANGE", this.fieldOptions, this.state.field.options);
+                    var data = {
+                        'name': file.name,
+                        'file': file,
+                        'res_id': this.fieldOptions.res_id,
+                        'res_model': this.fieldOptions.res_model,
+                        'access_token': this.fieldOptions.token,
+                    };
+                    ajax.post('/portal/attachment/add', data).then((attachment) => {
+                        attachment.state = 'pending';
+                        this.attachments.push(attachment);
+                        this._updateAttachments();
+                        console.log("POST", attachment);
+                        resolve();
+                    }).guardedCatch(function (error) {
+                        console.log("ERROR", error);
+                        // this.displayNotification({
+                        //     title: _t("Something went wrong."),
+                        //     message: _.str.sprintf(_t("The file <strong>%s</strong> could not be saved."),
+                        //         _.escape(file.name)),
+                        //     type: 'warning',
+                        //     sticky: true,
+                        // });
+                        resolve();
+                    });
+                });
+            })).then(() => {
+                // this.$sendButton.prop('disabled', false);
+            });
+        },
+        _updateAttachments: function () {
+            this.$(this.attachmentIdsSelector).val([this.attachments.map((attachment) => [attachment.id, attachment.name])]);
+            this.$(this.attachmentTokensSelector).val(_.pluck(this.attachments, 'access_token'));
+            this.$(this.attachmentsSelector).html(qweb.render('jowebutils.attachments', {
+                attachments: this.attachments,
+                showDelete: true,
+            }));
+        },
+    });
     const Many2OneField = SelectionField.extend();
     const One2ManyField = SelectionField.extend();
     const Many2ManyField = SelectionField.extend();
@@ -207,6 +292,7 @@ odoo.define('jowebutils.forms', function (require) {
         'one2many': One2ManyField,
         'many2many': Many2ManyField,
         'number': NumberField,
+        'attachments': AttachmentField,
         'hidden': HiddenField,
         'many2one-hidden': HiddenField
     }
