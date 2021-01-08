@@ -46,7 +46,8 @@ odoo.define('jowebutils.forms', function (require) {
             else if (this.state.field.type == 'many2one') {
                 const control = this.$('select').first();
                 const val = control.val();
-                return val ? parseInt(val) : null;
+                const text = control.find("[selected=selected]").text();
+                return val ? [parseInt(val), text] : null;
             }
             else if (this.state.field.type == 'text') {
                 const control = this.$('textarea').first();
@@ -55,6 +56,11 @@ odoo.define('jowebutils.forms', function (require) {
             else if (this.state.field.type == 'html') {
                 const control = this.$('textarea').first();
                 return control.val();
+            }
+            else if (this.state.field.type == 'many2one-hidden') {
+                const control = this.$('input').first();
+                const val = control.val().split(",");
+                return val && parseInt(val[0]) ? [parseInt(val[0]), val[1]] : "";
             }
             else {
                 const control = this.$('input').first();
@@ -149,7 +155,8 @@ odoo.define('jowebutils.forms', function (require) {
         'one2many': One2ManyField,
         'many2many': Many2ManyField,
         'number': NumberField,
-        'hidden': HiddenField
+        'hidden': HiddenField,
+        'many2one-hidden': HiddenField
     }
 
     const WebForm = Widget.extend({
@@ -229,6 +236,13 @@ odoo.define('jowebutils.forms', function (require) {
             });
             return errors;
         },
+
+        cleanValues: function () {
+            const obj = this.getValues();
+            return Object.entries(obj)
+              .filter(([_, v]) => [null, ""].indexOf(v) < 0 )
+              .reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
+          }
     });
 
     return {

@@ -15,10 +15,10 @@
     </t>
 
     <t t-name="jowebutils.field_template">
-        <div t-att-class="state.field.type != 'hidden' ? 'form-group row joweb-field' : ''
+        <div t-att-class="state.field.type.indexOf('hidden') &lt; 0 ? 'form-group row joweb-field' : ''
                 + ((state.field.required || state.mode == 'view') ? ' joweb-field-required' : '')
                 + (state.field.invisible ? ' d-none' : '')">
-            <label t-if="state.field.type != 'hidden'" t-att-for="state.field.name"
+            <label t-if="state.field.type.indexOf('hidden') &lt; 0" t-att-for="state.field.name"
                 class="col-sm-4 col-form-label"
                 t-att-data-toggle="state.field.tooltip ? 'tooltip' : ''"
                 t-att-data-placement="state.field.tooltip ? 'top' : ''"
