@@ -69,8 +69,7 @@ odoo.define('jowebutils.forms', function (require) {
             else if (this.state.field.type == 'attachments') {
                 const control = this.$('input').first();
                 const val = control.val().split(",");
-                console.log("VAL", val);
-                return val && parseInt(val[0]) ? [parseInt(val[0]), val[1]] : "";
+                return val && val[0] ? val : "";
             }
             else {
                 const control = this.$('input').first();
@@ -200,7 +199,8 @@ odoo.define('jowebutils.forms', function (require) {
     const AttachmentField = Field.extend({
         template: 'jowebutils.field_attachments',
         events: {
-            'change .file_input': '_onFileInputChange'
+            'change .file_input': '_onFileInputChange',
+            'click .attachment_delete': 'async _onAttachmentDeleteClick',
         },
         init: function (parent, mode, field, value) {
             this.fieldOptions = _.defaults(field.options || {}, {
@@ -212,6 +212,7 @@ odoo.define('jowebutils.forms', function (require) {
                 'res_id': false,
             });
             this.attachments = [];
+            this.showDelete = true;
             this._super(parent, mode, field, value);
         },
         start: function () {
@@ -220,14 +221,77 @@ odoo.define('jowebutils.forms', function (require) {
                 this.attachmentIdsSelector = `[name=${this.state.field.name}]`;
                 this.attachmentTokensSelector = '.attachment_tokens';
                 let value = this.getValue();
-                if (value) {
-                    this.attachments = value || [];
-                    _.each(this.attachments, (attachment) => {
-                        attachment.state = 'done';
+                if (value.length) {
+                    this._getAttachments(value).then(attachments => {
+                        this.attachments = attachments || this.attachments;
+                        this.state.value = attachments;
+                        this._updateAttachments();
                     });
-                    this._updateAttachments();
                 }
                 return Promise.resolve();
+            });
+        },
+        setValue: function (value) {
+            this.state.value = value;
+            this._getAttachments(value).then(attachments => {
+                this.attachments = attachments || this.attachments;
+                if (attachments.length) {
+                    this.state.value = attachments.map((att) => att.id);
+                } else {
+                    this.state.value = "";
+                }
+                this._updateAttachments();
+                this.renderElement();
+            });
+        },
+        _getAttachments: function (ids) {
+            return this._rpc({
+                model: 'ir.attachment',
+                method: 'search_read',
+                kwargs: {
+                    domain: [
+                        ['id', 'in', ids],
+                        // ['res_id', '=', this.fieldOptions.res_id],
+                        // ['res_model', '=', this.fieldOptions.res_model],
+                    ],
+                    fields: ['id', 'name', 'mimetype'],
+                },
+            });
+            // return this._rpc({
+            //     model: 'remark_attachments',
+            //     method: 'search_read',
+            //     kwargs: {
+            //         domain: [['id', 'in', ids]],
+            //         fields: ['id', 'project_task_remark_id', 'ir_attachment_id',],
+            //     },
+            // }).then((results) => {
+            //     let resultIds = results.map(res => res.ir_attachment_id);
+            //     return this._rpc({
+            //         model: 'ir.attachment',
+            //         method: 'search_read',
+            //         kwargs: {
+            //             domain: [['id', 'in', resultIds]],
+            //             fields: ['id', 'name', 'mimetype'],
+            //         },
+            //     });
+            // });
+        },
+        _onAttachmentDeleteClick: function (ev) {
+            var attachmentId = $(ev.currentTarget).closest('.attachment').data('id');
+            var accessToken = _.find(this.attachments, {'id': attachmentId}).access_token;
+            ev.preventDefault();
+            ev.stopPropagation();
+    
+            return this._rpc({
+                route: '/portal/attachment/remove',
+                params: {
+                    'attachment_id': attachmentId,
+                    'access_token': accessToken,
+                },
+            }).then(() => {
+                this.attachments = _.reject(this.attachments, {'id': attachmentId});
+                this._updateAttachments();
+                this.renderElement();
             });
         },
         _onFileInputChange: function () {
@@ -236,7 +300,6 @@ odoo.define('jowebutils.forms', function (require) {
             let self = this;
             return Promise.all(_.map(this.$('input.file_input')[0].files, (file) => {
                 return new Promise((resolve, reject) => {
-                    console.log("CHANGE", this.fieldOptions, this.state.field.options);
                     var data = {
                         'name': file.name,
                         'file': file,
@@ -248,10 +311,8 @@ odoo.define('jowebutils.forms', function (require) {
                         attachment.state = 'pending';
                         this.attachments.push(attachment);
                         this._updateAttachments();
-                        console.log("POST", attachment);
                         resolve();
                     }).guardedCatch(function (error) {
-                        console.log("ERROR", error);
                         // this.displayNotification({
                         //     title: _t("Something went wrong."),
                         //     message: _.str.sprintf(_t("The file <strong>%s</strong> could not be saved."),
@@ -267,7 +328,8 @@ odoo.define('jowebutils.forms', function (require) {
             });
         },
         _updateAttachments: function () {
-            this.$(this.attachmentIdsSelector).val([this.attachments.map((attachment) => [attachment.id, attachment.name])]);
+            let value = this.attachments.map((att) => att.id);
+            this.$(this.attachmentIdsSelector).val(value);
             this.$(this.attachmentTokensSelector).val(_.pluck(this.attachments, 'access_token'));
             this.$(this.attachmentsSelector).html(qweb.render('jowebutils.attachments', {
                 attachments: this.attachments,
