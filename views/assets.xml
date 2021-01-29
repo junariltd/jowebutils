@@ -13,6 +13,7 @@
             <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/widgets.css"/>
             <script type="text/javascript" src="/jowebutils/static/src/js/loading.js" />
             <script type="text/javascript" src="/jowebutils/static/src/js/owl_compatibility.js" />
+            <script type="text/javascript" src="/jowebutils/static/src/js/owl_app.js" />
 
             <!-- Legacy Components -->
             <script type="text/javascript" src="/jowebutils/static/src/js/legacy/forms.js" />
