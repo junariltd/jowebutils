@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <template id="assets_common" name="Shared Front-end and Back-end assets" inherit_id="web.assets_common">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/jowebutils/static/lib/owl_1.2.3.js" />
+        </xpath>
+    </template>
+
     <template id="assets_frontend" name="Junari Web Utils Assets Frontend" inherit_id="website.assets_frontend">
         <xpath expr="." position="inside">
             <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/forms.css"/>
             <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/widgets.css"/>
             <script type="text/javascript" src="/jowebutils/static/src/js/loading.js" />
-            <script type="text/javascript" src="/jowebutils/static/src/js/forms.js" />
-            <script type="text/javascript" src="/jowebutils/static/src/js/router.js" />
-            <script type="text/javascript" src="/jowebutils/static/src/js/widgets.js" />
+            <script type="text/javascript" src="/jowebutils/static/src/js/owl_compatibility.js" />
+
+            <!-- Legacy Components -->
+            <script type="text/javascript" src="/jowebutils/static/src/js/legacy/forms.js" />
+            <script type="text/javascript" src="/jowebutils/static/src/js/legacy/router.js" />
+            <script type="text/javascript" src="/jowebutils/static/src/js/legacy/widgets.js" />
         </xpath>
     </template>
 
