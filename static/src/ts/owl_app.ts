@@ -44,6 +44,7 @@ export function createOWLApp(appDef: OWLAppDefinition) {
                     return session.rpc(query.route, query.params, options);
                 }
             }
+            env.session = session;
         },
 
         initOWLQWeb: async function () {

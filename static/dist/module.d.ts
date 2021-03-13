@@ -7,6 +7,12 @@ declare module "jowebutils.owl_env" {
         services: {
             rpc: (params: any, options?: any) => any;
         };
+        session: {
+            user_id: number;
+            website_id: number;
+            website_company_id: number;
+            [key: string]: any;
+        };
         loadedXmlDependencies: string[];
     }
 }

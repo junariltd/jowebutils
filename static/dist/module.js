@@ -32,6 +32,7 @@ define("jowebutils.owl_app", ["require", "exports", "web.public.widget", "web.rp
                         return session.rpc(query.route, query.params, options);
                     }
                 };
+                env.session = session;
             },
             initOWLQWeb: async function () {
                 const qweb = new owl_1.QWeb();
