@@ -1,3 +1,8 @@
+///<amd-module name='jowebutils.owl_env'/>
+define("jowebutils.owl_env", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+});
 ///<amd-module name='jowebutils.owl_app'/>
 define("jowebutils.owl_app", ["require", "exports", "web.public.widget", "web.rpc", "web.session", "web.OwlCompatibility", "@odoo/owl"], function (require, exports, publicWidget, rpc, session, web_OwlCompatibility_1, owl_1) {
     "use strict";
@@ -28,18 +33,28 @@ define("jowebutils.owl_app", ["require", "exports", "web.public.widget", "web.rp
                     }
                 };
             },
-            start: function () {
-                return this.owl_component.env.router.start()
-                    .then(() => {
-                    this.owl_component.mount(this.el);
-                });
+            initOWLQWeb: async function () {
+                const qweb = new owl_1.QWeb();
+                const loadPromises = [];
+                if (appDef.xmlDependencies) {
+                    for (let dep of appDef.xmlDependencies) {
+                        loadPromises.push(owl_1.utils.loadFile(dep));
+                    }
+                }
+                const templateFiles = await Promise.all(loadPromises);
+                for (let templates of templateFiles) {
+                    qweb.addTemplates(templates);
+                }
+                const env = this.owl_component.env;
+                env.qweb = qweb;
+                env.loadedXmlDependencies = appDef.xmlDependencies || [];
+            },
+            start: async function () {
+                await this.initOWLQWeb();
+                await this.owl_component.env.router.start();
+                this.owl_component.mount(this.el);
             }
         });
     }
     exports.createOWLApp = createOWLApp;
-});
-///<amd-module name='jowebutils.owl_env'/>
-define("jowebutils.owl_env", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
 });

@@ -1,12 +1,3 @@
-/// <amd-module name="jowebutils.owl_app" />
-declare module "jowebutils.owl_app" {
-    import { Route } from '@odoo/owl/dist/types/router/router';
-    export interface OWLAppDefinition {
-        selector: string;
-        routes: Route[];
-    }
-    export function createOWLApp(appDef: OWLAppDefinition): any;
-}
 /// <amd-module name="jowebutils.owl_env" />
 declare module "jowebutils.owl_env" {
     import { Env } from "@odoo/owl/dist/types/component/component";
@@ -16,5 +7,16 @@ declare module "jowebutils.owl_env" {
         services: {
             rpc: (params: any, options?: any) => any;
         };
+        loadedXmlDependencies: string[];
     }
+}
+/// <amd-module name="jowebutils.owl_app" />
+declare module "jowebutils.owl_app" {
+    import { Route } from '@odoo/owl/dist/types/router/router';
+    export interface OWLAppDefinition {
+        selector: string;
+        routes: Route[];
+        xmlDependencies?: string[];
+    }
+    export function createOWLApp(appDef: OWLAppDefinition): any;
 }

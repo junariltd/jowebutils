@@ -7,5 +7,6 @@ export interface IOWLEnv extends Env {
     router: Router;
     services: {
         rpc: (params: any, options?: any) => any;
-    }
+    };
+    loadedXmlDependencies: string[];
 }

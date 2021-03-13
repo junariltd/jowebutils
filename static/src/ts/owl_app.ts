@@ -7,8 +7,9 @@ import * as rpc from 'web.rpc';
 import * as session from 'web.session';
 
 import { ComponentWrapper, WidgetAdapterMixin } from 'web.OwlCompatibility';
-import { Component, tags, router } from '@odoo/owl';
+import { Component, tags, router, utils, QWeb } from '@odoo/owl';
 import { Route } from '@odoo/owl/dist/types/router/router';
+import { IOWLEnv } from './owl_env';
 
 class App extends Component {}
 App.components = { RouteComponent: router.RouteComponent }
@@ -17,6 +18,7 @@ App.template = tags.xml`<RouteComponent />`;
 export interface OWLAppDefinition {
     selector: string;
     routes: Route[];
+    xmlDependencies?: string[];
 }
 
 export function createOWLApp(appDef: OWLAppDefinition) {
@@ -44,11 +46,27 @@ export function createOWLApp(appDef: OWLAppDefinition) {
             }
         },
 
-        start: function () {
-            return this.owl_component.env.router.start()
-                .then(() => {
-                    this.owl_component.mount(this.el);
-                });
+        initOWLQWeb: async function () {
+            const qweb = new QWeb();
+            const loadPromises = [];
+            if (appDef.xmlDependencies) {
+                for (let dep of appDef.xmlDependencies) {
+                    loadPromises.push(utils.loadFile(dep));
+                }
+            }
+            const templateFiles = await Promise.all(loadPromises);
+            for (let templates of templateFiles) {
+                qweb.addTemplates(templates);
+            }
+            const env: IOWLEnv = this.owl_component.env;
+            env.qweb = qweb;
+            env.loadedXmlDependencies = appDef.xmlDependencies || [];
+        },
+
+        start: async function () {
+            await this.initOWLQWeb();
+            await this.owl_component.env.router.start()
+            this.owl_component.mount(this.el);
         }
     });
 }
