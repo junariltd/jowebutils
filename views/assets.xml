@@ -4,7 +4,7 @@
     <template id="assets_common" name="Shared Front-end and Back-end assets" inherit_id="web.assets_common">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/jowebutils/static/lib/owl_1.2.3.js" />
-            <script type="text/javascript" src="/jowebutils/static/src/js/define.js"></script>
+            <script type="text/javascript" src="/jowebutils/static/src/js/define.js" />
         </xpath>
     </template>
 
@@ -14,7 +14,7 @@
             <link type="text/css" rel="stylesheet" href="/jowebutils/static/src/css/widgets.css"/>
             <script type="text/javascript" src="/jowebutils/static/src/js/loading.js" />
             <script type="text/javascript" src="/jowebutils/static/src/js/owl_compatibility.js" />
-            <script type="text/javascript" src="/jowebutils/static/src/js/owl_app.js" />
+            <script type="text/javascript" src="/jowebutils/static/dist/module.js" />
 
             <!-- Legacy Components -->
             <script type="text/javascript" src="/jowebutils/static/src/js/legacy/forms.js" />
