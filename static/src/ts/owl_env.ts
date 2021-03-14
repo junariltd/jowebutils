@@ -15,4 +15,5 @@ export interface IOWLEnv extends Env {
         [key: string]: any;
     }
     loadedXmlDependencies: string[];
+    [key: string]: any;
 }

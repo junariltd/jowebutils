@@ -1,7 +1,8 @@
 ///<amd-module name='jowebutils.forms.Fields'/>
 
-import { Component, tags, useState, QWeb } from '@odoo/owl';
+import { Component, tags, hooks } from '@odoo/owl';
 import { IOWLEnv } from '../owl_env';
+import { IFormContext } from './Form';
 
 export type FieldType = 'char' | 'text' | 'date' | 'datetime' |
     'selection' | 'many2one' | 'boolean' | 'html' | 'attachments';
@@ -27,13 +28,16 @@ export interface IFieldState {
 
 export class BaseField extends Component<IFieldProps, IOWLEnv> {
     state: IFieldState;
+    form: IFormContext;
 
     constructor() {
         super(...arguments);
-        this.state = useState({
+        this.state = hooks.useState({
             value: null
         });
+        this.form = hooks.useContext(this.env.formContext);
         console.log('Field:', this.props);
+        console.log('Context:', this.form);
     }
 
     $(selector: string) {
@@ -91,6 +95,14 @@ export class BaseField extends Component<IFieldProps, IOWLEnv> {
     //     this.state.value = value;
     //     this.renderElement();
     // },
+
+    get rawValue() {
+        return this.form.values[this.props.field.name];
+    }
+
+    get formattedValue() {
+        return this.formatValue(this.rawValue);
+    }
 
     formatValue(value: any) {
         if (this.props.field.type != 'boolean' && !value) {
@@ -216,12 +228,12 @@ CharField.template = tags.xml /* xml */ `
             class="form-control"
             t-att-name="props.field.name"
             t-att-required="props.field.required"
-            t-att-value="state.value"
+            t-att-value="formattedValue"
         />
         <div
             t-if="props.field.readonly"
             class="form-control-plaintext">
-            <t t-esc="formatValue(state.value)" />
+            <t t-esc="formattedValue" />
         </div>
     </FieldWrapper>
 `
