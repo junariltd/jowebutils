@@ -3,27 +3,57 @@
 import { Component, tags, hooks, Context, QWeb } from '@odoo/owl';
 import { IOWLEnv } from '../owl_env';
 
+export interface IValues { [fieldName: string]: any; }
+
 export interface IFormContext {
-    values: {
-        [fieldName: string]: any;
-    }
-    setValue?: (fieldName: string, value: any) => void;
+    values: IValues;
+    setValues: (values: IValues) => void;
+}
+
+export interface OwlEvent extends Event {
+    detail: any;
 }
 
 export class Form extends Component<any, IOWLEnv> {
+    formContext: IFormContext;
+
     constructor() {
         super(...arguments);
-        const formContext: IFormContext = {
+        const setValues = this.setValues.bind(this);
+        const formContextData = {
             values: {
                 name: 'myName'
             },
-            setValue: (fieldName, value) => console.log('setValue', fieldName, value)
-        }
-        this.env.formContext = new Context(formContext);
+            setValues
+        };
+        const formContextContainer = new Context(formContextData);
+        this.env.formContext = formContextContainer;
+        this.formContext = formContextContainer.state;
     }
+
+    setValues(values: IValues) {
+        console.log('form setValues', values);
+        Object.assign(this.formContext.values, values);
+        this.valuesChanged(Object.keys(values));
+    }
+
+    valuesChanged(fieldsChanged: string[]) {
+        this.trigger('values-changed', {
+            fieldsChanged,
+            values: this.formContext.values
+        });
+    }
+
+    onSubmit(ev: Event) {
+        ev.preventDefault();
+        console.log('form onSubmit. Values: ', this.formContext.values);
+        // Call custom 'submitted' event handler, if registered.
+        this.trigger('submitted', { values: this.formContext.values });
+    }
+
 }
 Form.template = tags.xml /* xml */ `
-    <form>
+    <form t-on-submit="onSubmit">
         <t t-slot="default" />
     </form>
 `

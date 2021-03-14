@@ -40,44 +40,19 @@ export class BaseField extends Component<IFieldProps, IOWLEnv> {
         console.log('Context:', this.form);
     }
 
-    $(selector: string) {
-        // Temp fix
-        return null as any;
+    onChange(ev: Event) {
+        const input = ev.target as HTMLInputElement;
+        console.log('field changed value', input.value);
+        this.setValue(input.value);
     }
 
-    getValue() {
-        if (this.props.field.type == 'selection') {
-            const control = this.$('select').first();
-            return control.val();
-        }
-        else if (this.props.field.type == 'many2one') {
-            const control = this.$('select').first();
-            const val = control.val();
-            const text = control.find("[selected=selected]").text();
-            return val ? [parseInt(val), text] : null;
-        }
-        else if (this.props.field.type == 'text') {
-            const control = this.$('textarea').first();
-            return control.val();
-        }
-        else if (this.props.field.type == 'html') {
-            const control = this.$('textarea').first();
-            return control.val();
-        }
-        else if (this.props.field.type == 'attachments') {
-            const control = this.$('input').first();
-            const val = control.val().split(",");
-            return val && val[0] ? val : "";
-        }
-        else {
-            const control = this.$('input').first();
-            return control.val();
-        }
+    setValue(value: any) {
+        this.form.setValues({ [this.props.field.name]: value });
     }
 
     validate() {
         const errors = [];
-        const value = this.getValue();
+        const value = this.rawValue;
         const field = this.props.field;
         const required = field.required;
         if (required && typeof value != 'boolean' && !value) {
@@ -90,11 +65,6 @@ export class BaseField extends Component<IFieldProps, IOWLEnv> {
     //     this.state.mode = mode;
     //     this.renderElement();
     // }
-
-    // setValue: function (value) {
-    //     this.state.value = value;
-    //     this.renderElement();
-    // },
 
     get rawValue() {
         return this.form.values[this.props.field.name];
@@ -229,6 +199,28 @@ CharField.template = tags.xml /* xml */ `
             t-att-name="props.field.name"
             t-att-required="props.field.required"
             t-att-value="formattedValue"
+            t-on-change="onChange"
+        />
+        <div
+            t-if="props.field.readonly"
+            class="form-control-plaintext">
+            <t t-esc="formattedValue" />
+        </div>
+    </FieldWrapper>
+`
+export class BooleanField extends BaseField {}
+BooleanField.components = { FieldWrapper }
+BooleanField.template = tags.xml /* xml */ `
+    <FieldWrapper field="props.field">
+        <input
+            t-if="!props.field.readonly"
+            type="text"
+            class="form-control"
+            t-att-name="props.field.name"
+            t-att-required="props.field.required"
+            t-att-value="true"
+            t-att-checked="rawValue"
+            t-on-change="onChange"
         />
         <div
             t-if="props.field.readonly"
