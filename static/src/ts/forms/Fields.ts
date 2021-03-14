@@ -214,7 +214,7 @@ BooleanField.template = tags.xml /* xml */ `
     <FieldWrapper field="props.field">
         <input
             t-if="!props.field.readonly"
-            type="text"
+            type="checkbox"
             class="form-control"
             t-att-name="props.field.name"
             t-att-required="props.field.required"

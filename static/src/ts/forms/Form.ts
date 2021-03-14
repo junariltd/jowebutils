@@ -21,9 +21,7 @@ export class Form extends Component<any, IOWLEnv> {
         super(...arguments);
         const setValues = this.setValues.bind(this);
         const formContextData = {
-            values: {
-                name: 'myName'
-            },
+            values: {},  // TODO: Accept "initialValues" prop
             setValues
         };
         const formContextContainer = new Context(formContextData);
