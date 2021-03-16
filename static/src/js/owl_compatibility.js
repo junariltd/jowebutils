@@ -1,6 +1,8 @@
 odoo.define('web.OwlCompatibility', function () {
     "use strict";
 
+    /*** Copied verbatim from Odoo 14 ***/
+
     /**
      * This file defines the necessary tools for the transition phase where Odoo
      * legacy widgets and Owl components will coexist. There are two possible
